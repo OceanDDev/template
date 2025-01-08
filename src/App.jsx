@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebook, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
-import './App.css';
 
 function App() {
   return (
-    <div className="flex flex-col items-center bg-orange-200">
+    <div className='flex justify-center'>
+    <div className="flex flex-col items-center bg-orange-200 w-[1080px]">
       <div className="flex flex-row gap-20 text-sm pt-10   font-bold">
         <p>BIO</p>
         <p>PORTFOLIO</p>
@@ -34,6 +34,8 @@ function App() {
         </div>
       </div>
     </div>
+    </div>
+
   );
 }
 

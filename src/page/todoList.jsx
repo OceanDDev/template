@@ -140,13 +140,14 @@ const ToDoList = () => {
 
     const getFilter = () => {
         if (filter === "done") {
-            return allTasks.filter((task) => task.isChecked);
-        } else if (filter === "todo") {
-            return allTasks.filter((task) => !task.isChecked);
-        } else {
-            return allTasks;
+          return allTasks.filter((task) => task.isChecked);
         }
-    };
+        if (filter === "todo") {
+          return allTasks.filter((task) => !task.isChecked);
+        }
+        return allTasks;
+      };
+      
 
     return (
         <div className="max-w-lg mx-auto mt-10 p-5 bg-white rounded-lg">

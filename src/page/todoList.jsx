@@ -32,7 +32,7 @@ const TaskItem = ({ task, onDelete, onEdit, onToggleComplete, isEditing, setEdit
                         type="text"
                         value={editedTask}
                         onChange={(e) => setEditedTask(e.target.value)}
-                        onKeyPress={handleEnter}
+                        onKeyDown={handleEnter}
                         className="border rounded px-2 py-1"
                     />
                 ) : (

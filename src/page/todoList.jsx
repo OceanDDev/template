@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 /* eslint-disable react/prop-types */
 const TaskItem = ({ task, onDelete, onEdit, onToggleComplete, isEditing, setEditingTask }) => {
@@ -17,6 +18,7 @@ const TaskItem = ({ task, onDelete, onEdit, onToggleComplete, isEditing, setEdit
 
     const handleEnter = (e) => {
         if (e.key === "Enter" && editedTask.trim() !== "") {
+            e.preventDefault();
             onEdit(editedTask);
             setEditingTask(null);
         }
@@ -76,17 +78,17 @@ const TaskItem = ({ task, onDelete, onEdit, onToggleComplete, isEditing, setEdit
 
 const ToDoList = () => {
     const [allTasks, setAllTasks] = useState([
-        { text: "Task 1", isChecked: false },
-        { text: "Task 2", isChecked: false },
-        { text: "Task 3", isChecked: false },
-        { text: "Task 4", isChecked: false },
-        { text: "Task 5", isChecked: false },
-        { text: "Task 6", isChecked: false },
+        { id:"e166ea51-8620-47b0-8134-fb02cdcc4fb1", text: "Task 1", isChecked: false },
+        { id:"1aa3e3a6-878c-4c94-a8e7-13921e2487e8", text: "Task 2", isChecked: false },
+        { id:"6bb6fd58-5489-4df1-b6b8-493f31d75083", text: "Task 3", isChecked: false },
+        { id:"eb817ce4-65aa-4f8b-9fec-9242b0497421", text: "Task 4", isChecked: false },
+        { id:"c0062684-1707-4270-91ce-639e19a73d72", text: "Task 5", isChecked: false },
+        { id:"b320dac3-e9cf-45fc-8120-557774eaf824", text: "Task 6", isChecked: false },
 
     ]);
-    const [tasks, setTasks] = useState(allTasks);
     const [newTask, setNewTask] = useState("");
     const [editingTask, setEditingTask] = useState(null);
+    const [filter, setFilter] = useState("all");
 
     const handleInputChange = (event) => {
         setNewTask(event.target.value);
@@ -94,64 +96,56 @@ const ToDoList = () => {
 
     const handleAddTask = () => {
         if (newTask.trim()) {
-            const newTaskObj = { text: newTask, isChecked: false };
+            const newTaskObj = { id: uuidv4(), text: newTask, isChecked: false };
             setAllTasks([...allTasks, newTaskObj]);
-            setTasks([...allTasks, newTaskObj]);
             setNewTask("");
         }
     };
 
-    const handleDeleteTask = (index) => {
-        const confirm = window.confirm("Có xóa không ?");
-        if (confirm) {
-            const updatedTasks = tasks.filter((_, i) => i !== index);
-            setTasks(updatedTasks);
-            setAllTasks(updatedTasks);
+    const handleDeleteTask = (id) => {
+        if (window.confirm("Có xóa không?")) {
+            setAllTasks(allTasks.filter((task) => task.id !== id));
         }
     };
 
-    const handleEditTask = (index, updatedTask) => {
-        const updatedTasks = [...allTasks];
-        updatedTasks[index].text = updatedTask;
-        setAllTasks(updatedTasks);
-        setTasks(updatedTasks);
+    const handleEditTask = (id, updatedTask) => {
+        setAllTasks(
+            allTasks.map((task) =>
+                task.id === id ? { ...task, text: updatedTask } : task
+            )
+        );
     };
 
-    const handleToggleComplete = (index) => {
-        const updatedTasks = [...allTasks];
-        updatedTasks[index].isChecked = !updatedTasks[index].isChecked;
-        setAllTasks(updatedTasks);
-        setTasks(updatedTasks);
+    const handleToggleComplete = (id) => {
+        setAllTasks(
+            allTasks.map((task) =>
+                task.id === id ? { ...task, isChecked: !task.isChecked } : task
+            )
+        );
     };
 
     const handleDeleteCompletedTasks = () => {
         const confirm = window.confirm("Có xóa không ?");
         if (confirm) {
-            const updatedTasks = allTasks.filter((task) => !task.isChecked);
-            setAllTasks(updatedTasks);
-            setTasks(updatedTasks);
-        }
+            setAllTasks(allTasks.filter((task) => !task.isChecked));
+        } 
     };
 
     const handleDeleteAllTasks = () => {
         const confirm = window.confirm("Có xóa không ?");
         if (confirm) {
-
             setAllTasks([]);
-            setTasks([]);
         }
     };
 
-    const handleFilterAll = () => {
-        setTasks(allTasks);
-    };
-
-    const handleFilterDone = () => {
-        setTasks(allTasks.filter((task) => task.isChecked));
-    };
-
-    const handleFilterTodo = () => {
-        setTasks(allTasks.filter((task) => !task.isChecked));
+    const getFilter = () => {
+        if (filter === "done") {
+            return allTasks.filter((task) => task.isChecked);
+        } else if (filter === "todo") {
+            return allTasks.filter((task) => !task.isChecked);
+        } else {
+            return allTasks;
+        }
     };
 
     return (
@@ -176,19 +170,19 @@ const ToDoList = () => {
             <h1 className="text-2xl font-bold text-center mb-5">TODO LIST</h1>
             <div className="flex flex-row gap-3 justify-center mb-10">
                 <button
-                    onClick={handleFilterAll}
+                    onClick={() => setFilter("all")}
                     className="px-4 py-2 w-full bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                 >
                     ALL
                 </button>
                 <button
-                    onClick={handleFilterDone}
+                    onClick={() => setFilter("done")}
                     className="px-4 py-2 w-full bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                 >
                     DONE
                 </button>
                 <button
-                    onClick={handleFilterTodo}
+                    onClick={() => setFilter("todo")}
                     className="px-4 py-2 w-full bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                 >
                     TODO
@@ -205,14 +199,14 @@ const ToDoList = () => {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y">
-                    {tasks.map((task, index) => (
+                    {getFilter().map((task) => (
                         <TaskItem
-                            key={index}
+                            key={task.id}
                             task={task}
-                            onDelete={() => handleDeleteTask(index)}
-                            onEdit={(updatedTask) => handleEditTask(index, updatedTask)}
-                            onToggleComplete={() => handleToggleComplete(index)}
-                            isEditing={editingTask === task}
+                            onDelete={() => handleDeleteTask(task.id)}
+                            onEdit={(updatedTask) => handleEditTask(task.id, updatedTask)}
+                            onToggleComplete={() => handleToggleComplete(task.id)}
+                            isEditing={editingTask?.id === task.id}
                             setEditingTask={setEditingTask}
                         />
                     ))}

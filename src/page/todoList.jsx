@@ -126,7 +126,7 @@ const ToDoList = () => {
 
     const handleDeleteCompletedTasks = () => {
         const confirm = window.confirm("Có xóa không ?");
-        if(confirm) {
+        if (confirm) {
             const updatedTasks = allTasks.filter((task) => !task.isChecked);
             setAllTasks(updatedTasks);
             setTasks(updatedTasks);
@@ -135,11 +135,11 @@ const ToDoList = () => {
 
     const handleDeleteAllTasks = () => {
         const confirm = window.confirm("Có xóa không ?");
-if(confirm){ 
+        if (confirm) {
 
-    setAllTasks([]);
-    setTasks([]);
-}
+            setAllTasks([]);
+            setTasks([]);
+        }
     };
 
     const handleFilterAll = () => {

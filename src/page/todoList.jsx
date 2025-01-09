@@ -106,6 +106,7 @@ const ToDoList = () => {
         if (confirm) {
             const updatedTasks = tasks.filter((_, i) => i !== index);
             setTasks(updatedTasks);
+            setAllTasks(updatedTasks);
         }
     };
 
